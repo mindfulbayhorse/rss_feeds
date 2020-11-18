@@ -4,6 +4,8 @@
 /storage/*.key
 /vendor
 /.seetings
+.project
+.buildpath
 .env
 .env.backup
 .phpunit.result.cache
