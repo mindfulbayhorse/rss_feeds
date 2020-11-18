@@ -1,23 +1,35 @@
 <template>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">Example Component</div>
-
-                    <div class="card-body">
-                        I'm an example component.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  <span @click="isActive = true"
+    class="switchAdd">+ Add new category</span>
+  <form action="/categories" id="addCategory" :class="{ active: isActive }">
+    <input type="text" value="" />
+    <input type="submit" value="add" />
+  </form>
 </template>
-
 <script>
-    export default {
-        mounted() {
-            console.log('Component mounted.')
-        }
+  export default {
+    data() {
+      return {
+        isActive: false
+      }
+    },
+    methods: {
+      addCategory(){
+        alert('new category is added');
+      }
     }
+  }
 </script>
+<style>
+  #addCategory{
+    display: none;
+  }
+
+  #addCategory.active{
+    display: block;
+  }
+
+  .switchAdd{
+    cursor: pointer;
+  }
+</style>
