@@ -20,7 +20,7 @@ Route::get('/', function () {
 });
 
 Route::resource('rss', RssFeedController::class);
-Route::resource('categories', CategoryController::class);
+Route::resource('categories', CategoryController::class)->middleware('auth');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');

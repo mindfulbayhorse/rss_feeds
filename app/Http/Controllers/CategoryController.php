@@ -14,7 +14,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return view('rss.categories.index');
+        $categories = Category::all();
+        return view('rss.categories.index', compact('categories'));
     }
 
     /**
@@ -35,7 +36,14 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, ['name'=>'required']);
+        
+        $category = $this->validate($request, ['name'=>'required']);
+        
+        $id = Category::create($category);
+        
+        if ($request->wantsJson()){
+            return ['success' => $id];
+        }
         
         redirect('/categories');
     }

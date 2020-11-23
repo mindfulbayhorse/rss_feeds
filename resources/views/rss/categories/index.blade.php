@@ -1,9 +1,9 @@
 @extends('layout')
 
-@section('title','List of rss feeds')
+@section('title','RSS categories')
 
 @section('content')
-<a href="/categories/create" class="btn">Add category/a>
+<a href="/categories/create" class="btn">Add category</a>
 <main>
     
  <table class="feed_list">

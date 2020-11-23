@@ -14,12 +14,9 @@ class ManagingCategoriesTest extends TestCase
 	
 	public $user;
 	
-	
-	
     /** @test */
     public function it_must_have_a_name()
     {
-    	//$this->withoutExceptionHandling();
     	
         $category = Category::factory()->raw(['name'=>'']);
         $user = User::factory()->create();
@@ -29,4 +26,19 @@ class ManagingCategoriesTest extends TestCase
         	->assertSessionHasErrors('name');
         		
     }
+    
+    /** @test */
+    public function guest_cannot_create_a_category()
+    {
+        //$this->withoutExceptionHandling();
+        
+        $category = Category::factory()->raw();
+        
+        $this->post('/categories', $category)
+            ->assertRedirect('/login');       
+        
+    }
+    
+    /** @test */
+    public function 
 }

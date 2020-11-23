@@ -57,19 +57,4 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
-    
-    public function feeds()
-    {
-        return $this->hasMany(Rssfeed::class, 'user_id', 'id');
-    }
-    
-    public function addFeed(Rssfeed $feed)
-    {
-        $this->feeds()->save($feed);
-    }
-    
-    public function getFeed($url)
-    {
-        return $this->feeds()->where('url', $url)->get();
-    }
 }
