@@ -1,4 +1,5 @@
 require('./bootstrap');
+require('alpinejs');
 
 window.Vue = require('vue');
 
@@ -11,3 +12,5 @@ createApp({
     categoryForm,
   }
 }).mount('#app');
+
+

@@ -1,24 +1,46 @@
 <template>
   <span @click="isActive = true"
     class="switchAdd">+ Add new category</span>
-  <form action="/categories" id="addCategory" :class="{ active: isActive }">
-    <input type="text" value="" />
-    <input type="submit" value="add" />
+  <form id="addCategory" :class="{ active: isActive }">
+    <span class="text-error"
+      v-if="errors.name"
+      v-text="errors.name[0]"></span>
+    <input name="name" 
+      type="text" 
+      v-model="form.name" 
+      :class="errors.name ? 'input-error' : ''"/>
+    <button @click.stop.prevent="addCategory">Add</button>
   </form>
 </template>
 <script>
   export default {
     data() {
       return {
-        isActive: false
+        isActive: false,
+        form:{
+          name: ''
+        },
+        errors: {
+
+        }
       }
     },
     methods: {
       addCategory(){
-        alert('new category is added');
+        axios.post('/categories', this.form)
+          .then(response => {
+            
+            if (!!response.data){
+              location.reload();
+              this.errors = {};
+            }
+          })
+          .catch(error => {
+            this.errors = error.response.data.errors;
+          });
+        }
       }
     }
-  }
 </script>
 <style>
   #addCategory{
