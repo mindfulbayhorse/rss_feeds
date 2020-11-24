@@ -67,7 +67,7 @@ class CategoryController extends Controller
      */
     public function edit(category $category)
     {
-        //
+        return view('rss.categories.edit', compact('category'));
     }
 
     /**
