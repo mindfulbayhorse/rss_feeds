@@ -13,13 +13,15 @@
   </form>
 </template>
 <script>
+import QuickAccessForm from './QuickAccessForm';
+
   export default {
     data() {
       return {
         isActive: false,
-        form:{
+        form: new QuickAccessForm({
           name: ''
-        },
+        }),
         errors: {
 
         }
@@ -27,20 +29,12 @@
     },
     methods: {
       addCategory(){
-        axios.post('/categories', this.form)
-          .then(response => {
-            
-            if (!!response.data){
-              location.reload();
-              this.errors = {};
-            }
-          })
-          .catch(error => {
-            this.errors = error.response.data.errors;
-          });
-        }
+      
+        this.form.submit('/categories');
+
       }
     }
+  }
 </script>
 <style>
   #addCategory{
