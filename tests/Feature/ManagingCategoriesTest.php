@@ -40,5 +40,36 @@ class ManagingCategoriesTest extends TestCase
     }
     
     /** @test */
-    public function 
+    public function it_can_be_deleted()
+    {
+        $category = Category::factory()->create();
+        
+        $this->assertDatabaseHas('categories', $category->toArray());
+        
+        $user = User::factory()->create();
+        
+        $this->actingAs($user)
+            ->delete($category->path());
+        
+        $this->assertDatabaseMissing('categories', $category->toArray());
+    }
+    
+    /** @test */
+    public function it_can_be_changed()
+    {
+        $category = Category::factory()->create();
+        
+        $user = User::factory()->create();
+        
+        $this->actingAs($user)->get($category->path().'/edit')->assertSee($category->name);
+            
+        $this->actingAs($user)->patch($category->path(),['name'=>'Changed name']);
+        
+        $this->assertDatabaseHas('categories', [
+            'name'=>'Changed name',
+            'id' => $category->id
+        ]);
+    }
+    
+    
 }
