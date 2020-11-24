@@ -3,13 +3,14 @@
     class="switchAdd">+ Add new category</span>
   <form id="addCategory" :class="{ active: isActive }">
     <span class="text-error"
-      v-if="errors.name"
-      v-text="errors.name[0]"></span>
+      v-if="form.errors.name"
+      v-text="form.errors.name[0]"></span>
     <input name="name" 
       type="text" 
       v-model="form.name" 
-      :class="errors.name ? 'input-error' : ''"/>
-    <button @click.stop.prevent="addCategory">Add</button>
+      :class="form.errors.name ? 'input-error' : ''"/>
+    <input type="hidden" value="ajax" />
+    <button @click.stop.prevent="submit">Add</button>
   </form>
 </template>
 <script>
@@ -21,16 +22,17 @@ import QuickAccessForm from './QuickAccessForm';
         isActive: false,
         form: new QuickAccessForm({
           name: ''
-        }),
-        errors: {
-
-        }
+        })
       }
     },
     methods: {
-      addCategory(){
+      async submit(){
       
-        this.form.submit('/categories');
+        this.form.submit('/categories')
+          .then(response => {
+            if (!!response.data.success) location.reload();
+          })
+          .catch(error => console.log(error));
 
       }
     }

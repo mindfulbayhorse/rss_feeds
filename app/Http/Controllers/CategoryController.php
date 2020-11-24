@@ -42,7 +42,7 @@ class CategoryController extends Controller
         $id = Category::create($category);
         
         if ($request->wantsJson()){
-            return ['success' => $id];
+            return ['success' => true];
         }
         
         redirect('/categories');
@@ -79,7 +79,11 @@ class CategoryController extends Controller
      */
     public function update(Request $request, category $category)
     {
-        //
+        $changes = $this->validate($request, ['name'=>'required']);
+        
+        if ($changes) $category->update($changes);
+        
+        return view();
     }
 
     /**
@@ -90,6 +94,8 @@ class CategoryController extends Controller
      */
     public function destroy(category $category)
     {
-        //
+        $category->delete();
+        
+        redirect('/categries');
     }
 }
