@@ -1,6 +1,6 @@
 <template>
-  <span @click="isActive = true"
-    class="switchAdd">+ Add new category</span>
+  <button @click.stop.prevent="activeState"
+    class="switchAdd">+ Add new category</button>
   <form id="addCategory" :class="{ active: isActive }">
     <span class="text-error"
       v-if="form.errors.name"
@@ -26,6 +26,7 @@ import QuickAccessForm from './QuickAccessForm';
       }
     },
     methods: {
+      
       async submit(){
       
         this.form.submit('/categories')
@@ -34,7 +35,18 @@ import QuickAccessForm from './QuickAccessForm';
           })
           .catch(error => console.log(error));
 
+      },
+
+      activeState(){
+
+        if (!this.isActive) {
+          this.isActive = true;
+          return;
+        }
+
+        this.isActive = false;
       }
+
     }
   }
 </script>
