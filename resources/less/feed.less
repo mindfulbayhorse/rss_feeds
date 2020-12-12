@@ -1,0 +1,28 @@
+@background-bright: rgb(226, 168, 32);
+@border-bright: #A80707;
+
+.long() {
+    width: 400px;
+  }
+
+.additional(){
+  background: @background-bright;
+  border: 1px solid @border-bright;
+}
+
+.feed{
+  &-new{
+    border: 1px solid @line-color;
+    padding: 20px 10px 10px;
+
+    max-width: 450px;
+
+    label, input{
+      display: block;
+    }
+
+    .url, .title{
+      .long();
+    }
+  }
+}

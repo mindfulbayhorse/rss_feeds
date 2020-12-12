@@ -1,3 +1,8 @@
+@import 'shortcut';
+@import 'feed';
+
+@line-color: rgba(112,112,112);
+
 body{
   width: 100%;
   text-align: center;
@@ -9,12 +14,37 @@ body{
   text-align: left;
 }
 
+#rss_app {
+  h1{
+    color: @line-color;
+    font-weight: bold;
+    font-size: 20px;
+  }
 
-form input{
-  margin: 0px 10px 10px;
-  padding: 5px;
+  .required(){
+    color: #d91111;
+  }
+
+  form {
   
-  &.input-error{
-    border: 1px solid red;
+    input, textarea, select{
+      margin: 0px 0px 10px 0px;
+      padding: 5px;
+      border: 1px solid @line-color;
+      border-radius: 5px;
+    
+      &.input-error{
+        border: 1px solid red;
+      }
+    }
+
+    .complex{
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .required label span{
+      .required();
+    }
   }
 }

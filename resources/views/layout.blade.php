@@ -13,7 +13,7 @@
             <div class="profile">
                 <dropdown :position="absolute">
                     <template v-slot:trigger>
-                        <button>{{ auth()->user()->name }}</button>
+                        <button title="{{ auth()->user()->name }}"></button>
                     </template>
                     
                     <a href="/profile">Profile</a>
@@ -27,8 +27,11 @@
             @hasSection('left_sidebar')
                     @yield('left_sidebar')
             @endif
-            
+             
             <div class="center_part">
+                @hasSection('breadcrumbes')
+                    @yield('breadcrumbes')
+                @endif
                 <h1>@yield('title')</h1>
             
             

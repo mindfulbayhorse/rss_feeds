@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title','List of rss feeds')
+@section('title','News')
 
 @section('content')
 <a href="/rss/create" class="btn">Add rss feed</a>
