@@ -1,0 +1,32 @@
+@background: rgba(224, 221, 190, 1);
+@highlight: rgba(105, 11, 11, 1);
+
+.shortcut{
+  display: flex;
+  background: @background;
+}
+
+.profile{
+  margin: 5px 15px 5px auto;
+  min-width: 100px;
+ 
+  .icon{
+     display: flex;
+  }
+  
+  button{
+    border-radius: 50%;
+    display: block;
+    width: 35px;
+    height: $width;
+    background: @highlight;
+    margin: 0px 0px 0px auto;
+    outline: none;
+    
+    
+    &:hover, &:focus{
+      border: none;
+      outline: none;
+    }
+  }
+}
