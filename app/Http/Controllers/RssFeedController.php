@@ -29,7 +29,14 @@ class RssFeedController extends Controller
     {
     	$categories = Category::all();
     	
-    	return view('rss.create', compact('categories'));
+    	$section = ['url' => route('rss.index'), 'title' => 'RSS feeds'];
+    	$title = 'Add new feed';
+    	
+    	return view('rss.create', [
+    	    'categories' => $categories,
+    	    'section' => $section,
+    	    'title' => $title
+    	]);
     }
 
     /**
