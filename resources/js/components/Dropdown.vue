@@ -1,7 +1,7 @@
 <template>
   <div class="dropdown" :style="{position}">
     
-    <div @click.prevent="isOpen = !isOpen">
+    <div @click.prevent="isOpen = !isOpen" class="icon">
       <slot name="trigger">
       </slot>
     </div>
