@@ -1,7 +1,7 @@
 <template>
   <div class="dropdown" :style="{position}">
     
-    <div @click.prevent="isOpen = !isOpen" class="icon">
+    <div @click.stop.prevent="isOpen = !isOpen" class="icon">
       <slot name="trigger">
       </slot>
     </div>
@@ -21,6 +21,24 @@ export default {
 
   data(){
     return { isOpen: false }
+  },
+
+  methods: {
+    closeIfNotFocused(event) {
+      if (!event.target.closest('.dropdown')){
+        this.isOpen = false;
+        document.removeEventListener('click', this.closeIfNotFocused);
+      }
+      
+    }
+  },
+
+  watch: {
+     isOpen(isOpen) {
+       if (isOpen){
+         document.addEventListener('click', this.closeIfNotFocused);
+       }
+     } 
   }
   
 }
