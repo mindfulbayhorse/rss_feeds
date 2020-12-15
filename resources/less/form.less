@@ -1,0 +1,38 @@
+.additional_button(@background) { 
+  background: @background;
+}
+
+.required(){
+  color: #d91111;
+}
+
+ form {
+  
+  #rss_app &{
+
+    input, textarea, select{
+      margin: 0px 0px 10px 0px;
+      padding: 5px;
+      border: 1px solid @line-color;
+      border-radius: 5px;
+    
+      &.input-error{
+        border: 1px solid red;
+      }
+    }
+
+    button{
+      .additional_button(@btn-background);
+    }
+
+    .complex{
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .required label span{
+      .required();
+    }
+  }
+    
+}

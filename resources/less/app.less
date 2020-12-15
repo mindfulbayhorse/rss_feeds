@@ -1,12 +1,19 @@
 @import 'shortcut';
 @import 'feed';
+@import 'category';
+@import 'form';
 
 @line-color: rgba(112,112,112);
+@link-color: rgba(105,11,11);
+@btn-background: rgba(226, 168, 32);
+
 
 body{
   width: 100%;
   text-align: center;
 }
+
+
 
 .wide_screen{
   margin: 5% auto;
@@ -21,30 +28,10 @@ body{
     font-size: 20px;
   }
 
-  .required(){
-    color: #d91111;
+  a{
+    color: @link-color;
+    font-size: 16px;
+    font-weight: bold;
   }
-
-  form {
-  
-    input, textarea, select{
-      margin: 0px 0px 10px 0px;
-      padding: 5px;
-      border: 1px solid @line-color;
-      border-radius: 5px;
-    
-      &.input-error{
-        border: 1px solid red;
-      }
-    }
-
-    .complex{
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .required label span{
-      .required();
-    }
-  }
+ 
 }

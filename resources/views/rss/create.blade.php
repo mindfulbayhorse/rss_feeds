@@ -43,9 +43,10 @@
                 <textarea name="description">{{ old('description') }}</textarea>
             </div>
             
-            <div class="complex">
+            <div class="complex category">
                 <label for="categories">Category: </label>
-                <select name="category">
+                <select name="category"
+                    id="category">
     	            <options>
     	                <option value="">Choose category</option>
                          @foreach ($categories as $category)
@@ -53,7 +54,7 @@
                          @endforeach
     	            </options>
                 </select>
-                <category-form></category-form>
+                <category-form unique="newCategory"></category-form>
             </div>
       
       <input type="submit" name="save" value="Save"/>

@@ -11,7 +11,7 @@
     <div id="rss_app">
          <div class="shortcut">
             <div class="profile">
-                <dropdown :position="absolute">
+                <dropdown>
                     <template v-slot:trigger>
                         <button title="{{ auth()->user()->name }}"></button>
                     </template>
