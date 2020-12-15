@@ -1,7 +1,8 @@
 <template>
-  <button @click.stop.prevent="activeState"
-    class="switchAdd">+ Add new category</button>
-  <form id="addCategory" :class="{ active: isActive }">
+  <a @click.stop.prevent="activeState"
+    class="switchAdd">+ Add new</a>
+  <form :id="unique" 
+    :class="{ active: isActive }">
     <span class="text-error"
       v-if="form.errors.name"
       v-text="form.errors.name[0]"></span>
@@ -10,13 +11,18 @@
       v-model="form.name" 
       :class="form.errors.name ? 'input-error' : ''"/>
     <input type="hidden" value="ajax" />
-    <button @click.stop.prevent="submit">Add</button>
+    <button @click.stop.prevent="submit">Create</button>
   </form>
 </template>
 <script>
 import QuickAccessForm from './QuickAccessForm';
 
   export default {
+
+    props: {
+      unique: {default: 'addCategory'}
+    },
+
     data() {
       return {
         isActive: false,
@@ -51,14 +57,6 @@ import QuickAccessForm from './QuickAccessForm';
   }
 </script>
 <style>
-  #addCategory{
-    display: none;
-  }
-
-  #addCategory.active{
-    display: block;
-  }
-
   .switchAdd{
     cursor: pointer;
   }
