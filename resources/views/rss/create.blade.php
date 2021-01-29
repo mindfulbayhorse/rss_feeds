@@ -24,6 +24,8 @@
         
         <form method="post" action="/rss" class="feed-new">
             {{ csrf_field() }}
+            <input type="hidden" name="user_id" value="{{ $user->id }}" />
+            
             <div class="required">
                 <label for="url">url: <span>*</span></label>
                 <input type="txt" 

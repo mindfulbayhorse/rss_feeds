@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Rssfeed;
 use Illuminate\Http\Request;
 use App\Models\Category;
+use Illuminate\Support\Facades\Auth;
 
 class RssFeedController extends Controller
 {
@@ -31,11 +32,13 @@ class RssFeedController extends Controller
     	
     	$section = ['url' => route('rss.index'), 'title' => 'RSS feeds'];
     	$title = 'Add new feed';
+    	$user = Auth::user();
     	
     	return view('rss.create', [
     	    'categories' => $categories,
     	    'section' => $section,
-    	    'title' => $title
+    	    'title' => $title,
+    	    'user' => $user
     	]);
     }
 
