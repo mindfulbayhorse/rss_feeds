@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Suite\Jwplayer;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +14,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton(Jwplayer::class, function ($app) {
+            $jwplayerConfig = config('services.jwplayer');
+            return new Jwplayer($jwplayerConfig['key'], $jwplayerConfig['secret']);
+        });
     }
 
     /**
