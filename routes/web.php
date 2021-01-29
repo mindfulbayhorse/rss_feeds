@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RssFeedController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\HomePageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,9 +16,7 @@ use App\Http\Controllers\CategoryController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomePageController::class, 'show']);
 
 Route::resource('rss', RssFeedController::class)->middleware('auth');
 Route::resource('categories', CategoryController::class)->middleware('auth');
