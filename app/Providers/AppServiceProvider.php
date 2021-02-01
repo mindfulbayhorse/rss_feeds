@@ -14,10 +14,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(Jwplayer::class, function ($app) {
-            $jwplayerConfig = config('services.jwplayer');
-            return new Jwplayer($jwplayerConfig['key'], $jwplayerConfig['secret']);
-        });
+        
+        $this->app->singleton('jwplayer', function ($app) {
+                $jwplayerConfig = config('services.jwplayer');
+                return new Jwplayer($jwplayerConfig['key'], $jwplayerConfig['secret']);
+            });
+        
     }
 
     /**

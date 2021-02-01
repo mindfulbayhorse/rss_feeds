@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Suite\Jwplayer;
 
 class HomePageController extends Controller
 {
     
-    
-    public function show(Jwplayer $jwplayer){
+    public function show(){
 
-        return view('welcome', compact('jwplayer'));
+        return view('welcome', [ 'jwplayer' => app('jwplayer')]);
     }
 }
