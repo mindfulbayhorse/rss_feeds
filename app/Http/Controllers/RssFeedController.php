@@ -32,13 +32,11 @@ class RssFeedController extends Controller
     	
     	$section = ['url' => route('rss.index'), 'title' => 'RSS feeds'];
     	$title = 'Add new feed';
-    	$user = Auth::user();
     	
     	return view('rss.create', [
     	    'categories' => $categories,
     	    'section' => $section,
-    	    'title' => $title,
-    	    'user' => $user
+    	    'title' => $title
     	]);
     }
 
@@ -50,12 +48,13 @@ class RssFeedController extends Controller
      */
     public function store(Request $request)
     {
-    	Rssfeed::create($this->validate($request, [
-    			'url' => 'required|url',
-    			'user_id' =>'required',
-    			'title' => 'nullable',
-    			'category_id' => 'nullable'
-    	]));
+        $rss = new Rssfeed($rss = $this->validate($request, [
+            'url' => 'required|url',
+            'title' => 'nullable',
+            'category_id' => 'nullable'
+        ]));
+        
+        $request->user()->addFeed($rss);
     	
     	return redirect('rss');
     }

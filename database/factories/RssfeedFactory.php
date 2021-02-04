@@ -25,8 +25,7 @@ class RssfeedFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence,
-        	'url' => $this->faker->url,
-        	'user_id' => User::factory()
+        	'url' => $this->faker->url
         ];
     }
 }

@@ -28,20 +28,20 @@ class ManagingFeedsTest extends TestCase
     {
     	$this->withoutExceptionHandling();
 
-        $rss = Rssfeed::factory()->raw(['user_id' => $this->user->id]);
+        $rss = Rssfeed::factory()->raw();
         
         $this->assertDatabaseMissing('rss_feeds', $rss);
         
         $this->actingAs($this->user)
         	->get('/rss')
         	->assertStatus(200);
-        
+        	
         $response = $this->actingAs($this->user)
-	        ->post('/rss', $rss);
+            ->post('/rss', $rss);
         
 	    $this->followRedirects($response)
 	    	->assertSee($rss['url']);
-        
+	
         $this->assertDatabaseHas('rss_feeds', $rss);
     }
     
