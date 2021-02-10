@@ -33,6 +33,15 @@ return [
     'jwplayer' => [
         'key' => env('JWPLAYER_API_KEY'),
         'secret' => env('JWPLAYER_API_SECRET'),
-    ]
+    ],
+    
+    'vonage' => [
+        'key' => env('VONAGE_API_KEY'),
+        'secret' => env('VONAGE_API_SECRET'),
+    ],
+    
+    'nexmo' => [
+        'sms_from' => '+79037645618',
+    ],
 
 ];
