@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Notifications\Messages\NexmoMessage;
 
 class FeedUpdated extends Notification
 {
@@ -29,7 +30,7 @@ class FeedUpdated extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail', 'sms'];
+        return ['nexmo'];
     }
 
     /**
@@ -44,6 +45,13 @@ class FeedUpdated extends Notification
                     ->line('The introduction to the notification.')
                     ->action('Notification Action', url('/'))
                     ->line('Thank you for using our application!');
+    }
+    
+    
+    public function toNexmo($notifiable)
+    {
+        return (new NexmoMessage)
+        ->content('Your SMS message content');
     }
 
     /**
