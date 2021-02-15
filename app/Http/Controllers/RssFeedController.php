@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Rssfeed;
 use Illuminate\Http\Request;
 use App\Models\Category;
-use Illuminate\Support\Facades\Auth;
 use App\Notifications\FeedUpdated;
 
 class RssFeedController extends Controller
@@ -56,7 +55,7 @@ class RssFeedController extends Controller
         ]));
         
         $request->user()->addFeed($rss);
-        $user->notify(new FeedUpdated($invoice));
+        //$request->user()->notify(new FeedUpdated());
     	
     	return redirect('rss');
     }
