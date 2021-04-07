@@ -54,7 +54,8 @@ class RssFeedController extends Controller
             'category_id' => 'nullable'
         ]));
         
-        $request->user()->addFeed($rss);
+        $rss->add($request->user());
+        
         //$request->user()->notify(new FeedUpdated());
     	
     	return redirect('rss');
