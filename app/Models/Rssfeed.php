@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use \App\Models\User;
 
 class Rssfeed extends Model
 {
@@ -36,6 +35,13 @@ class Rssfeed extends Model
     public function category(){
     	
     	return $this->belongsTo(Category::class);
+    }
+    
+    public function add($user = null){
+        
+        $this->user_id = $user ? $user->id : auth()->id;
+        
+        $this->save();
     }
     
 }

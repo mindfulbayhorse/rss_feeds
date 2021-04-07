@@ -70,4 +70,15 @@ class ManagingFeedsTest extends TestCase
 	    $this->assertDatabaseHas('rss_feeds', $rss);
 	    	
     }
+    
+    /** @test */
+    public function guests_cannot_add_feeds()
+    {
+        $rss = Rssfeed::factory()->raw();
+        
+        $this->post('/rss', $rss)
+            ->assertRedirect('/login');
+        
+        $this->assertDatabaseMissing('rss_feeds', $rss);
+    }
 }
