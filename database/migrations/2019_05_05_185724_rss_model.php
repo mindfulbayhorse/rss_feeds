@@ -28,7 +28,7 @@ class RssModel extends Migration
             	->constrained()
             	->onDelete('cascade');
             
-            $table->index(['user_id','url']);
+            $table->unique(['user_id','url']);
         });
     }
 
