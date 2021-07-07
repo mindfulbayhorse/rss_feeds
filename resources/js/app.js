@@ -14,5 +14,3 @@ createApp({
     dropdown
   }
 }).mount('#rss_app');
-
-

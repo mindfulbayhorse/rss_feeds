@@ -13,6 +13,7 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/app.js', 'public/js')
     .postCss('resources/css/app.css', 'public/css', [
+<<<<<<< HEAD
         require('postcss-import'),
         require('tailwindcss'),
     ])
@@ -21,3 +22,7 @@ mix.js('resources/js/app.js', 'public/js')
     .webpackConfig(require('./webpack.config'))
     .browserSync('http://rss-tracker.com')
     .version();
+=======
+        //
+    ]);
+>>>>>>> 8.x

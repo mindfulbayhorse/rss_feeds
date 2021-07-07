@@ -16,11 +16,12 @@
 
         <style>
             body {
-                font-family: 'Nunito';
+                font-family: 'Nunito', sans-serif;
             }
         </style>
     </head>
     <body class="antialiased">
+
         <div>Video API</div>
         @if ($jwplayer)
         	<p>It is set up!</p>

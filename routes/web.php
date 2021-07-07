@@ -1,9 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\RssFeedController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomePageController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +18,7 @@ use App\Http\Controllers\HomePageController;
 |
 */
 
+
 Route::get('/', [HomePageController::class, 'show']);
 
 Route::resource('rss', RssFeedController::class)->middleware('auth');
@@ -24,3 +27,4 @@ Route::resource('categories', CategoryController::class)->middleware('auth');
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
+
