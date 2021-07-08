@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Rssfeed;
+use Carbon\Carbon;
 
 class ParsingRssTest extends TestCase
 {
@@ -14,23 +15,32 @@ class ParsingRssTest extends TestCase
     /** @test */
     public function last_build_date_can_be_saved()
     {
-        $url = $this->faker->url('php://memory');
-        //$title  = $this->faker->title();
         
-        $memoryStream = fopen('php://memory', 'rw+');
-        
+        $memoryStream = fopen('php://memory', 'rw');
+        $dateCreated = Carbon::now();
         
         //create any carbon date
-        fwrite($memoryStream, $this->fakeXMLFeed());
+        fwrite($memoryStream, $this->fakeXMLFeed($dateCreated->toRssString()));
         
-        $rss = Rssfeed::factory()->create();
-        
+        $rss = Rssfeed::factory()->create(['url'=>'php://memory']);
         
         //change carbon date
-        $rss->checkUpdate();
+        $rss->checkLastUpdate();
 
         //check if it is XML
-        $this->assertDatabaseHas('rss_feeds', $data);
+        $this->assertDatabaseHas('rss_feeds', [
+            'id'=>$rss->id,
+            'last_update' => $dateCreated->toDateTimeString()
+        ]);
+        
+        $dateCreated->addDay();
+        
+        fwrite($memoryStream, $this->fakeXMLFeed($dateCreated->toRssString()));
+        
+        $this->assertDatabaseHas('rss_feeds', [
+            'id'=>$rss->id,
+            'last_update' => $dateCreated->toDateTimeString()
+        ]);
         
     }
     
