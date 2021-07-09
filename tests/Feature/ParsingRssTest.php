@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Rssfeed;
+use App\Models\User;
 use Carbon\Carbon;
 
 class ParsingRssTest extends TestCase
@@ -22,11 +23,8 @@ class ParsingRssTest extends TestCase
         //create any carbon date
         fwrite($memoryStream, $this->fakeXMLFeed($dateCreated->toRssString()));
         
-        $rss = Rssfeed::factory()->create(['url'=>'php://memory']);
+        $rss = Rssfeed::factory()->for(User::factory())->create(['url'=>'php://memory']);
         
-        //change carbon date
-        $rss->checkLastUpdate();
-
         //check if it is XML
         $this->assertDatabaseHas('rss_feeds', [
             'id'=>$rss->id,
@@ -36,6 +34,9 @@ class ParsingRssTest extends TestCase
         $dateCreated->addDay();
         
         fwrite($memoryStream, $this->fakeXMLFeed($dateCreated->toRssString()));
+        
+        //change carbon date
+        $rss->checkLastUpdate();
         
         $this->assertDatabaseHas('rss_feeds', [
             'id'=>$rss->id,
