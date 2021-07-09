@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Events\ParseRss;
 
 class Rssfeed extends Model
 {
@@ -13,6 +14,10 @@ class Rssfeed extends Model
     protected $table = 'rss_feeds';
     
     protected $guarded = [];
+    
+    protected $dispatchesEvents = [
+        'created' => ParseRss::class
+    ];
     
     public $timestamps = false;
     
