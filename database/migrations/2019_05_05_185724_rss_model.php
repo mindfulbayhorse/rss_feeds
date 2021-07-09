@@ -20,6 +20,7 @@ class RssModel extends Migration
             $table->string('title')->nullable();
             $table->string('description')->nullable();
             $table->timestamp('updated_at')->nullable();
+            $table->timestamp('last_update',6)->nullable();
             $table->timestamp('created_at')->default(date('Y-m-d H-m-s'));
             
             $table->foreignId('category_id')->nullable();
