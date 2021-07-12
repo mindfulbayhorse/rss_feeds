@@ -16,33 +16,48 @@ class ParsingRssTest extends TestCase
     /** @test */
     public function last_build_date_can_be_saved()
     {
+        if (!file_exists(public_path('test'))){
+            mkdir(public_path('test'));
+            $delete = true;
+        }
         
-        $memoryStream = fopen('php://memory', 'rw');
+        $xml = fopen(public_path('test/test.xml'), 'w');
         $dateCreated = Carbon::now();
         
-        //create any carbon date
-        fwrite($memoryStream, $this->fakeXMLFeed($dateCreated->toRssString()));
+        if ($xml){
+            //create any carbon date
+            fwrite($xml, $this->fakeXMLFeed($dateCreated->toRssString()));
+            
+            fclose($xml);
+            
+            $rss = Rssfeed::factory()->for(User::factory())->create(['url'=>url('test/test.xml')]);
+            
+            //check if it is XML
+            $this->assertDatabaseHas('rss_feeds', [
+                'id'=>$rss->id,
+                'last_update' => $dateCreated->toDateTimeString()
+            ]);
+            
+            $dateCreated->addDay();
+            
+            $xml = fopen(public_path('test/test.xml'), 'w');
+            fwrite($xml, $this->fakeXMLFeed($dateCreated->toRssString()));
+            
+            //change carbon date
+            $rss->checkLastUpdate();
+            
+            $this->assertDatabaseHas('rss_feeds', [
+                'id'=>$rss->id,
+                'last_update' => $dateCreated->toDateTimeString()
+            ]);
+            
+            fclose($xml);
+            
+            unlink(public_path('test/test.xml'));
+        }
         
-        $rss = Rssfeed::factory()->for(User::factory())->create(['url'=>'php://memory']);
-        
-        //check if it is XML
-        $this->assertDatabaseHas('rss_feeds', [
-            'id'=>$rss->id,
-            'last_update' => $dateCreated->toDateTimeString()
-        ]);
-        
-        $dateCreated->addDay();
-        
-        fwrite($memoryStream, $this->fakeXMLFeed($dateCreated->toRssString()));
-        
-        //change carbon date
-        $rss->checkLastUpdate();
-        
-        $this->assertDatabaseHas('rss_feeds', [
-            'id'=>$rss->id,
-            'last_update' => $dateCreated->toDateTimeString()
-        ]);
-        
+        if (!empty($delete)) unlink(public_path('test'));
+
     }
     
     
