@@ -16,7 +16,7 @@ class ParseRss
      *
      * @return void
      */
-    public function __construct($rss)
+    public function __construct($rss, $update = false)
     {
         $this->rss = $rss;
     }
