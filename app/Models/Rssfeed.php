@@ -20,7 +20,28 @@ class Rssfeed extends Model
         'created' => ParseRss::class
     ];
     
+    
+    
     public $timestamps = false;
+    
+    
+    public function setLastUpdateAttribute($value) {
+        
+        if (!empty($value)) {
+            $this->attributes['last_update'] = Carbon::createFromFormat('Y-m-d H:i:s', $value);
+        } else {
+            $this->attributes['last_update'] = $value;
+        }
+       
+        
+    }
+    
+    public function getLastUpdateAttribute($value) {
+       
+        if (!empty($value)) return Carbon::parse($value);
+        
+        return null;
+    }
     
     public function isActual($date){
     	
@@ -60,8 +81,7 @@ class Rssfeed extends Model
         $result = $reader->open($this->url);
         
         if (!$result) {
-            $reader->close();
-            return;
+            return false;
         }
         
         while ($reader->read()) {
@@ -73,13 +93,23 @@ class Rssfeed extends Model
         
         if (!$rssUpdate) {
             $reader->close();
-            return;
+            return false;
         }
-        
+
         $reader->close();
         
-        $this->last_update=Carbon::createFromFormat(\DateTime::RSS, $rssUpdate);
+        $updatingDate = Carbon::createFromFormat(\DateTime::RSS, $rssUpdate);
+
+        if (!is_null($this->last_update)){
+            if ($this->last_update->equalTo($updatingDate)){
+                return false;
+            } 
+        }
+        
+        $this->last_update=$updatingDate;
+ 
         $this->save();
+        return true;
     }
     
 }
