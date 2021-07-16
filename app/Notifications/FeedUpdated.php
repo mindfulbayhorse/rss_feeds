@@ -30,7 +30,7 @@ class FeedUpdated extends Notification
      */
     public function via($notifiable)
     {
-        return ['nexmo'];
+        return ['mail'];
     }
 
     /**
