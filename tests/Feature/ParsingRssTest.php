@@ -8,60 +8,94 @@ use Tests\TestCase;
 use App\Models\Rssfeed;
 use App\Models\User;
 use Carbon\Carbon;
+use App\Jobs\ProcessRss;
 
 class ParsingRssTest extends TestCase
 {
-    use WithFaker, RefreshDatabase;
+    use WithFaker;
+    
+    private $delete = false;
+    private $dateCreated;
+    private $rss;
+    private $xmlPath = 'test.xml';
+    private $testFolder = 'test';
+    private $updatingDate;
+    private $xmlRss;
+    
+    protected function setUp():void
+    {
+        parent::setUp();
+        
+        if (!file_exists(public_path($this->testFolder))){
+            mkdir(public_path($this->testFolder));
+            $this->delete = true;
+        }
+        
+        $this->xmlRss = public_path($this->testFolder.'\\'.$this->xmlPath);
+        $xml = fopen($this->xmlRss, 'w');
+        $this->updatingDate = Carbon::now();
+        
+        if ($xml){
+            //create any carbon date
+            fwrite($xml, $this->fakeXMLFeed($this->updatingDate->toRssString()));
+            
+            fclose($xml);
+        }
+        
+        
+        $this->rss = Rssfeed::factory()
+            ->for(User::factory())
+            ->create(['url'=>url($this->testFolder.'/'.$this->xmlPath)]);
+    }
     
     /** @test */
     public function last_build_date_can_be_saved()
     {
-        if (!file_exists(public_path('test'))){
-            mkdir(public_path('test'));
-            $delete = true;
+        $this->withoutExceptionHandling();
+        //check if it is XML
+        $this->assertDatabaseHas('rss_feeds', [
+            'id'=>$this->rss->id,
+            'last_update' => $this->updatingDate->toDateTimeString()
+        ]);
+        
+        $this->updatingDate->addDay();
+
+        $xml = fopen($this->xmlRss,'w');
+        
+        if ($xml) {
+            fwrite($xml, $this->fakeXMLFeed($this->updatingDate->toRssString()));
+            fclose($xml);
         }
         
-        $xml = fopen(public_path('test/test.xml'), 'w');
-        $dateCreated = Carbon::now();
+        //change carbon date
+        $this->rss->checkLastUpdate();
         
-        if ($xml){
-            //create any carbon date
-            fwrite($xml, $this->fakeXMLFeed($dateCreated->toRssString()));
-            
-            fclose($xml);
-            
-            $rss = Rssfeed::factory()->for(User::factory())->create(['url'=>url('test/test.xml')]);
-            
-            //check if it is XML
-            $this->assertDatabaseHas('rss_feeds', [
-                'id'=>$rss->id,
-                'last_update' => $dateCreated->toDateTimeString()
-            ]);
-            
-            $dateCreated->addDay();
-            
-            $xml = fopen(public_path('test/test.xml'), 'w');
-            fwrite($xml, $this->fakeXMLFeed($dateCreated->toRssString()));
-            
-            //change carbon date
-            $rss->checkLastUpdate();
-            
-            $this->assertDatabaseHas('rss_feeds', [
-                'id'=>$rss->id,
-                'last_update' => $dateCreated->toDateTimeString()
-            ]);
-            
-            fclose($xml);
-            
-            unlink(public_path('test/test.xml'));
-        }
-        
-        if (!empty($delete)) unlink(public_path('test'));
+        $this->assertDatabaseHas('rss_feeds', [
+            'id'=>$this->rss->id,
+            'last_update' => $this->updatingDate->toDateTimeString()
+        ]);
 
     }
     
+    /** @test */
+    public function notification_is_sent_after_last_rss_update()
+    {
+        //change carbon date
+        $this->updatingDate->addDay();
+        
+
+        $xml = fopen($this->xmlRss, 'w');
+        
+        if ($xml) {
+            fwrite($xml, $this->fakeXMLFeed($this->updatingDate->toRssString()));
+            fclose($xml);
+        }
+  
+        ProcessRss::dispatch($this->rss);
+    }
     
-    function fakeXMLFeed($buildDate){
+    
+    private function fakeXMLFeed($buildDate){
         
         $rssExample = '<?xml version="1.0" encoding="UTF-8"?>'.
             '<rss version="2.0">'.
@@ -77,5 +111,13 @@ class ParsingRssTest extends TestCase
         return $rssExample;
         
         
+    }
+    
+    
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        unlink($this->xmlRss);
+        //if ($this->delete) unlink(public_path($this->testFolder));
     }
 }
