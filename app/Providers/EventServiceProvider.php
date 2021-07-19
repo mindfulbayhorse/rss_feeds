@@ -7,6 +7,8 @@ use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use App\Listeners\RssUpdates;
 use App\Events\ParseRss;
+use App\Observers\RssFeedObserver;
+use App\Models\Rssfeed;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -20,9 +22,9 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         
-        ParseRss::class => [
-            RssUpdates::class,
-        ],
+        //ParseRss::class => [
+        //    RssUpdates::class,
+        //],
     ];
 
     /**
@@ -32,6 +34,6 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Rssfeed::observe(RssFeedObserver::class);
     }
 }
