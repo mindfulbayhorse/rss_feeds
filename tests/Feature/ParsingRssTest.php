@@ -4,11 +4,16 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 use App\Models\Rssfeed;
 use App\Models\User;
 use Carbon\Carbon;
 use App\Jobs\ProcessRss;
+use App\Notifications\FeedUpdated;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Queue;
+use App\Jobs\NotifyAfterFeedUpdate;
 
 class ParsingRssTest extends TestCase
 {
@@ -42,34 +47,21 @@ class ParsingRssTest extends TestCase
             fclose($xml);
         }
         
-        
-        $this->rss = Rssfeed::factory()
-            ->for(User::factory())
-            ->create(['url'=>url($this->testFolder.'/'.$this->xmlPath)]);
     }
+    
     
     /** @test */
     public function last_build_date_can_be_saved()
     {
-        $this->withoutExceptionHandling();
+        $this->withoutEvents();
+        
+        $this->rss = Rssfeed::factory()
+            ->for(User::factory())
+            ->create(['url'=>url($this->testFolder.'/'.$this->xmlPath)]);
+        
+        ProcessRss::dispatchNow($this->rss);
+        
         //check if it is XML
-        $this->assertDatabaseHas('rss_feeds', [
-            'id'=>$this->rss->id,
-            'last_update' => $this->updatingDate->toDateTimeString()
-        ]);
-        
-        $this->updatingDate->addDay();
-
-        $xml = fopen($this->xmlRss,'w');
-        
-        if ($xml) {
-            fwrite($xml, $this->fakeXMLFeed($this->updatingDate->toRssString()));
-            fclose($xml);
-        }
-        
-        //change carbon date
-        $this->rss->checkLastUpdate();
-        
         $this->assertDatabaseHas('rss_feeds', [
             'id'=>$this->rss->id,
             'last_update' => $this->updatingDate->toDateTimeString()
@@ -80,18 +72,37 @@ class ParsingRssTest extends TestCase
     /** @test */
     public function notification_is_sent_after_last_rss_update()
     {
+        $this->withoutEvents();
+        
+        $this->rss = Rssfeed::factory()
+            ->for(User::factory())
+            ->create(['url'=>url($this->testFolder.'/'.$this->xmlPath)]);
+        
+        Notification::fake();
+        
         //change carbon date
+        NotifyAfterFeedUpdate::dispatchNow($this->rss->user);
+        
+        Notification::assertSentTo(
+            [$this->rss->user], FeedUpdated::class
+            );
+    }
+    
+    
+    /** @test */
+    public function updating_rss_feed_processes_notification()
+    {
+        //$this->withoutEvents();
+        //job faking
+        $this->rss = Rssfeed::factory()
+            ->for(User::factory())
+            ->create(['url'=>url($this->testFolder.'/'.$this->xmlPath)]);
+        
         $this->updatingDate->addDay();
         
-
-        $xml = fopen($this->xmlRss, 'w');
-        
-        if ($xml) {
-            fwrite($xml, $this->fakeXMLFeed($this->updatingDate->toRssString()));
-            fclose($xml);
-        }
-  
-        ProcessRss::dispatch($this->rss);
+        $this->rss->last_update = $this->updatingDate;
+        $this->rss->save();
+        //NotifyAfterFeedUpdate is dispatched
     }
     
     
@@ -110,14 +121,13 @@ class ParsingRssTest extends TestCase
         
         return $rssExample;
         
-        
     }
     
     
     protected function tearDown(): void
     {
         parent::tearDown();
-        unlink($this->xmlRss);
+        //unlink($this->xmlRss);
         //if ($this->delete) unlink(public_path($this->testFolder));
     }
 }
