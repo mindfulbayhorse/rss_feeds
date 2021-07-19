@@ -16,12 +16,6 @@ class Rssfeed extends Model
     
     protected $guarded = [];
     
-    protected $dispatchesEvents = [
-        'created' => ParseRss::class
-    ];
-    
-    
-    
     public $timestamps = false;
     
     
@@ -33,7 +27,6 @@ class Rssfeed extends Model
             $this->attributes['last_update'] = $value;
         }
        
-        
     }
     
     public function getLastUpdateAttribute($value) {
@@ -75,29 +68,35 @@ class Rssfeed extends Model
         $this->save();
     }
     
-    public function checkLastUpdate()
+    /*public function checkLastUpdate()
     {
         $reader = new \XMLReader();
-        $result = $reader->open($this->url);
         
-        if (!$result) {
-            return false;
-        }
-        
-        while ($reader->read()) {
-            if ($reader->name === 'lastBuildDate') {
-                $rssUpdate = $reader->readString();
-                break;
+        try {
+            $result = $reader->open($this->url);
+            
+            if (!$result) {
+                return false;
             }
-        }
-        
-        if (!$rssUpdate) {
+            
+            while ($reader->read()) {
+                if ($reader->name === 'lastBuildDate') {
+                    $rssUpdate = $reader->readString();
+                    break;
+                }
+            }
+            
+            if (!$rssUpdate) {
+                $reader->close();
+                return false;
+            }
+            
             $reader->close();
+        } catch (\ErrorException $e){
+            
             return false;
         }
-
-        $reader->close();
-        
+       
         $updatingDate = Carbon::createFromFormat(\DateTime::RSS, $rssUpdate);
 
         if (!is_null($this->last_update)){
@@ -110,6 +109,6 @@ class Rssfeed extends Model
  
         $this->save();
         return true;
-    }
+    }*/
     
 }
