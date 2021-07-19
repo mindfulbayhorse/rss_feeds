@@ -7,6 +7,7 @@ use App\Models\Rssfeed;
 use App\Models\Category;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\User;
+use Illuminate\Support\Facades\Event;
 
 class RssTest extends TestCase
 {
@@ -15,12 +16,14 @@ class RssTest extends TestCase
     /** @test */
     public function it_has_a_category()
     {
-        $user = User::factory()->create();
+        
+        Event::fake();
+        
     	$category = Category::factory()->create();
-    	$rss = Rssfeed::factory()->create([
-    	    'category_id' => $category,
-    	    'user_id' => $user
-    	    ]);
+    	$rss = Rssfeed::factory()
+    	    ->for(User::factory())
+    	    ->create(['category_id' => $category]);
+    	        
         $this->assertInstanceOf(Category::class, $rss->category);
     }
 }
