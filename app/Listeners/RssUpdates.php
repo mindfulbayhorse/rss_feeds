@@ -3,7 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\ParseRss;
-use Carbon\Carbon;
+use App\Jobs\ProcessRss;
 
 class RssUpdates
 {
@@ -26,7 +26,8 @@ class RssUpdates
      */
     public function handle(ParseRss $event)
     {
-        $event->rss->checkLastUpdate();
+        ProcessRss::dispatch($event->rss);
+        //$event->rss->checkLastUpdate();
 
     }
 }
