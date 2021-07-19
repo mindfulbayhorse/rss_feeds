@@ -18,6 +18,7 @@ class ParseRss
      */
     public function __construct($rss)
     {
+    
         $this->rss = $rss;
     }
 
