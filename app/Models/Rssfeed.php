@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Events\ParseRss;
 use Carbon\Carbon;
+use Illuminate\Notifications\Notifiable;
 
 class Rssfeed extends Model
 {
-	use HasFactory;
+	use HasFactory, Notifiable;
 	
       //table name
     protected $table = 'rss_feeds';
@@ -68,47 +69,11 @@ class Rssfeed extends Model
         $this->save();
     }
     
-    /*public function checkLastUpdate()
+    public function routeNotificationForMail($notification)
     {
-        $reader = new \XMLReader();
+        return $this->user->email;
         
-        try {
-            $result = $reader->open($this->url);
-            
-            if (!$result) {
-                return false;
-            }
-            
-            while ($reader->read()) {
-                if ($reader->name === 'lastBuildDate') {
-                    $rssUpdate = $reader->readString();
-                    break;
-                }
-            }
-            
-            if (!$rssUpdate) {
-                $reader->close();
-                return false;
-            }
-            
-            $reader->close();
-        } catch (\ErrorException $e){
-            
-            return false;
-        }
-       
-        $updatingDate = Carbon::createFromFormat(\DateTime::RSS, $rssUpdate);
-
-        if (!is_null($this->last_update)){
-            if ($this->last_update->equalTo($updatingDate)){
-                return false;
-            } 
-        }
-        
-        $this->last_update=$updatingDate;
- 
-        $this->save();
-        return true;
-    }*/
+    }
+    
     
 }
