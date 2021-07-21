@@ -11,13 +11,14 @@ use App\Models\User;
 use Carbon\Carbon;
 use App\Jobs\ProcessRss;
 use App\Notifications\FeedUpdated;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Queue;
+//use Illuminate\Support\Facades\Event;
+//use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Bus;
 use App\Jobs\NotifyAfterFeedUpdate;
 
 class ParsingRssTest extends TestCase
 {
-    use WithFaker;
+    use WithFaker, RefreshDatabase;
     
     private $delete = false;
     private $dateCreated;
@@ -47,17 +48,19 @@ class ParsingRssTest extends TestCase
             fclose($xml);
         }
         
+        $this->withoutEvents();
+        
+        //job faking
+        $this->rss = Rssfeed::factory()
+            ->for(User::factory())
+            ->create(['url'=>url($this->testFolder.'/'.$this->xmlPath)]);
+            
     }
     
     
     /** @test */
     public function last_build_date_can_be_saved()
     {
-        $this->withoutEvents();
-        
-        $this->rss = Rssfeed::factory()
-            ->for(User::factory())
-            ->create(['url'=>url($this->testFolder.'/'.$this->xmlPath)]);
         
         ProcessRss::dispatchNow($this->rss);
         
@@ -72,40 +75,38 @@ class ParsingRssTest extends TestCase
     /** @test */
     public function notification_is_sent_after_last_rss_update()
     {
-        $this->withoutEvents();
-        
-        $this->rss = Rssfeed::factory()
-            ->for(User::factory())
-            ->create(['url'=>url($this->testFolder.'/'.$this->xmlPath)]);
         
         Notification::fake();
         
-        //change carbon date
-        NotifyAfterFeedUpdate::dispatchNow($this->rss->user);
+        //$this->rss->user->notify(new FeedUpdated);
+        $this->rss->last_update = $this->updatingDate;
+        $this->rss->save();
         
         Notification::assertSentTo(
-            [$this->rss->user], FeedUpdated::class
+            [$this->rss], FeedUpdated::class
             );
     }
-    
+
     
     /** @test */
-    public function updating_rss_feed_processes_notification()
+    public function creating_rss_feed_generates_parsing()
     {
-        //$this->withoutEvents();
+        //Queue::fake();
+        
+        Bus::fake();
+        
         //job faking
         $this->rss = Rssfeed::factory()
             ->for(User::factory())
             ->create(['url'=>url($this->testFolder.'/'.$this->xmlPath)]);
         
-        $this->updatingDate->addDay();
-        
-        $this->rss->last_update = $this->updatingDate;
-        $this->rss->save();
-        //NotifyAfterFeedUpdate is dispatched
+        Bus::assertDispatched(ProcessRss::class);
+            
     }
     
-    
+    /*
+     * creating testing xml
+     */
     private function fakeXMLFeed($buildDate){
         
         $rssExample = '<?xml version="1.0" encoding="UTF-8"?>'.
