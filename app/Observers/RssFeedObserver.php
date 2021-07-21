@@ -3,8 +3,8 @@
 namespace App\Observers;
 
 use App\Models\Rssfeed;
-use App\Jobs\NotifyAfterFeedUpdate;
 use App\Jobs\ProcessRss;
+use App\Notifications\FeedUpdated;
 
 class RssFeedObserver
 {
@@ -34,7 +34,8 @@ class RssFeedObserver
     {
         
         if ($rssfeed->isDirty('last_update')){
-            NotifyAfterFeedUpdate::dispatch($rssfeed->user);
+
+            $rssfeed->notify(new FeedUpdated);
         }
     }
 
