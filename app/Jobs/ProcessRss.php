@@ -17,6 +17,7 @@ class ProcessRss implements ShouldQueue
     protected $rss;
     
     public $tries = 3;
+    public $timeout = 5;
     
     /**
      * Create a new job instance.

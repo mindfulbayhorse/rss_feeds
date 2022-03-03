@@ -10,6 +10,8 @@ use Illuminate\Notifications\Messages\NexmoMessage;
 class FeedUpdated extends Notification
 {
     use Queueable;
+    
+    //public $afterCommit = true;
 
     /**
      * Create a new notification instance.
