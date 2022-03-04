@@ -1,30 +1,29 @@
 {
-    "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.0",
-        "fideloper/proxy": "^4.4",
-        "fruitcake/laravel-cors": "^2.0",
+        "php": "^8.0.2",
+        "fruitcake/laravel-cors": "^2.0.5",
         "guzzlehttp/guzzle": "^7.0.1",
+        "itsgoingd/clockwork": "^5.1.5",
+        "laravel/framework": "^9.0",
         "laravel/jetstream": "^1.6",
-        "laravel/nexmo-notification-channel": "^2.5",
         "laravel/sanctum": "^2.6",
+        "laravel/tinker": "^2.7",
         "laravel/ui": "^3.1",
-        "livewire/livewire": "^2.0",
-        "nexmo/laravel": "^2.4",
-        "laravel/framework": "^8.40",
-        "laravel/tinker": "^2.5"
+        "laravel/vonage-notification-channel": "^3.0",
+        "livewire/livewire": "^2.0"
     },
     "require-dev": {
-        "facade/ignition": "^2.5",
+        "spatie/laravel-ignition": "^1.0",
         "fakerphp/faker": "^1.9.1",
+        "jeroen-g/laravel-packager": "^2.7",
         "laravel/sail": "^1.0.1",
-        "mockery/mockery": "^1.4.2",
-        "nunomaduro/collision": "^5.0",
-        "phpunit/phpunit": "^9.3.3"
+        "mockery/mockery": "^1.4.4",
+        "nunomaduro/collision": "^6.1",
+        "phpunit/phpunit": "^9.5.10"
     },
     "autoload": {
         "psr-4": {
@@ -42,6 +41,9 @@
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
+        ],
+        "post-update-cmd": [
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
