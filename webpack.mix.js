@@ -16,4 +16,9 @@ mix.js('resources/js/app.js', 'public/js')
         require('postcss-import'),
         require('tailwindcss'),
     ])
+    .less('resources/less/app.less', 'public/css')
+    .vue()
+    .webpackConfig(require('./webpack.config'))
+    .browserSync('http://rss-tracker.com')
+    .version()
     .webpackConfig(require('./webpack.config'));
