@@ -42,6 +42,7 @@ class ManagingCategoriesTest extends TestCase
     /** @test */
     public function it_can_be_deleted()
     {
+        
         $category = Category::factory()->create();
         
         $this->assertDatabaseHas('categories', $category->toArray());

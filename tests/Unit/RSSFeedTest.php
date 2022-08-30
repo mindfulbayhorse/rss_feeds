@@ -8,11 +8,10 @@ use \App\Models\Rssfeed;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Mail;
-use Tests\MailTrack;
 
 class RSSFeedTest extends TestCase
 {
-	use RefreshDatabase, WithFaker, MailTrack;
+	use RefreshDatabase, WithFaker;
 	
 	public $user;
 	
@@ -96,12 +95,8 @@ class RSSFeedTest extends TestCase
     			$message->from('foofoo@bar.com');
     		});
 
+			
     	}
-    	
-    	$this->seeEmailSentTo('foo@bar.com')
-    		->seeEmailSentFrom('foofoo@bar.com')
-    		->seeEmailEquals('Feed is updated')
-    		->seeEmailContains('Feed');
     	
     }
 }
