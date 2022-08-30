@@ -95,7 +95,7 @@ class CategoryController extends Controller
     public function destroy(category $category)
     {
         $category->delete();
-        
+
         redirect('/categries');
     }
 }
